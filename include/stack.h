@@ -20,16 +20,16 @@ class Stack
 protected:
 	ValType *pStack;
 	int Size;		// физический размер
-	int IndexLastElem;	// индекс последнего элемента в стеке
+	int Index;	// индекс первой свободной €чейки (следующа€ €чейка, после той, в которую установлен элемент)
 public:
 	Stack(int s = 0);
 	Stack(const Stack &v);			// конструктор копировани€
 	~Stack();
 	Stack& Push(ValType elem);		// вставка элемента
 	Stack& Pop(ValType elem);		// удаление элемента
-	ValType Top();		// просмотр верхнего элемента (без удалени€)
+	ValType& Top();		// просмотр верхнего элемента (без удалени€)
 	bool IsEmpty();		// проверка на пустоту
-	int GetSize();		// кол-во элементов в стеке
+	int GetSize() {return (Index - 1); }	// кол-во элементов в стеке
 	Stack& Clean();		// очистка стека
 
 };
@@ -40,7 +40,7 @@ Stack<ValType>::Stack(int s)
 	if (s<0)
 		throw ("Error");
 	Size = s;
-	IndexLastElem = 0;
+	Index = 0;
 	pStack = new ValType[Size];
 } /*-------------------------------------------------------------------------*/
 
@@ -48,7 +48,7 @@ template <class ValType>
 Stack<ValType>::Stack(const Stack<ValType> &v)
 {
 	Size = v.Size;
-	IndexLastElem = v.IndexLastElem;
+	Index = v.Index;
 	pStack = new ValType[Size];
 	for (int i = 0; i <Size; i++)
 		pStack[i] = v.pStack[i];
@@ -63,15 +63,18 @@ Stack<ValType>::~Stack()
 template <class ValType>
  Stack<ValType>& Stack<ValType>::Push(ValType elem)
 {
-	 if ((Size - IndexLastElem) >= 1)
-		 pVector[IndexLastElem + 1] = elem;
+	 if ((Size - Index) >= 1)
+	 {
+		 pVector[Index] = elem;
+		 Index += 1;
+	 }
 	 else
-		 if ((Size - IndexLastElem) = 0)
+		 if ((Size - Index) = 0)
 		 {
 			 Stack temp(this);
 			 delete[] pStack;
-			 Size += 1;
-			 IndexLastElem += 1;
+			 Size = temp.Size + 1;
+			 Index = temp.Index + 1;
 			 pStack = new ValType[Size];
 			 for (int i = 0; i < (Size - 1); i++)
 			 {
@@ -83,7 +86,40 @@ template <class ValType>
 } /*-------------------------------------------------------------------------*/
 
  template <class ValType>
-Stack<ValType>& Stack<ValType>::Pop(ValType elem)
-{
-	
-}
+ Stack<ValType>& Stack<ValType>::Pop(ValType elem)
+ {
+	 Stack temp(this);
+	 delete[] pStack;
+	 Size = temp.Size;
+	 Index = temp.Index - 1;
+	 for (int i = 0; i < Index; i++)
+	 {
+		 pStack[i] = temp.pStack[i];
+	 }
+	 return *this;
+ } /*-------------------------------------------------------------------------*/
+
+ template <class ValType>
+ ValType& Stack<ValType>::Top()
+ {
+	 return pStack[Index - 1];
+ }  /*-------------------------------------------------------------------------*/
+
+ template <class ValType>
+ bool Stack<ValType>::IsEmpty()
+ {
+	 if (Index == 0)
+		 return 1;
+	 else
+		 return 0;
+ } /*-------------------------------------------------------------------------*/
+
+ template <class ValType>
+ Stack<ValType>&  Stack<ValType>::Clean()
+ {
+	 Stack temp(this);
+	 delete[] pStack;
+	 Size = temp.Size;
+	 Index = 0;
+	 pStack = new ValType[Size];
+ } /*-------------------------------------------------------------------------*/
