@@ -22,11 +22,11 @@ protected:
 	int Size;		// физический размер
 	int Index;	// индекс первой свободной €чейки (следующа€ €чейка, после той, в которую установлен элемент)
 public:
-	Stack(int s = 0);
+	Stack(int s = 10);
 	Stack(const Stack &v);			// конструктор копировани€
 	~Stack();
 	Stack& Push(ValType elem);		// вставка элемента
-	Stack& Pop(ValType elem);		// удаление элемента
+	Stack& Pop();		// удаление элемента
 	ValType& Top();		// просмотр верхнего элемента (без удалени€)
 	bool IsEmpty();		// проверка на пустоту
 	int GetSize() {return (Index - 1); }	// кол-во элементов в стеке
@@ -40,7 +40,7 @@ Stack<ValType>::Stack(int s)
 	if (s<0)
 		throw ("Error");
 	Size = s;
-	Index = 0;
+	Index = -1;
 	pStack = new ValType[Size];
 } /*-------------------------------------------------------------------------*/
 
@@ -50,7 +50,7 @@ Stack<ValType>::Stack(const Stack<ValType> &v)
 	Size = v.Size;
 	Index = v.Index;
 	pStack = new ValType[Size];
-	for (int i = 0; i <Size; i++)
+	for (int i = 0; i < Index + 1; i++)
 		pStack[i] = v.pStack[i];
 } /*-------------------------------------------------------------------------*/
 
@@ -73,42 +73,35 @@ template <class ValType>
 		 {
 			 Stack temp(this);
 			 delete[] pStack;
-			 Size = temp.Size + 1;
+			 Size = temp.Size + 10;
 			 Index = temp.Index + 1;
 			 pStack = new ValType[Size];
-			 for (int i = 0; i < (Size - 1); i++)
+			 for (int i = 0; i < Index - 1; i++)
 			 {
 				 pStack[i] = temp.pStack[i];
 			 }
-			 pStack[Size] = elem;
+			 pStack[Index] = elem;
 		 }
 	 return *this;
 } /*-------------------------------------------------------------------------*/
 
  template <class ValType>
- Stack<ValType>& Stack<ValType>::Pop(ValType elem)
+ Stack<ValType>& Stack<ValType>::Pop()
  {
-	 Stack temp(this);
-	 delete[] pStack;
-	 Size = temp.Size;
-	 Index = temp.Index - 1;
-	 for (int i = 0; i < Index; i++)
-	 {
-		 pStack[i] = temp.pStack[i];
-	 }
+	 Index -= 1;
 	 return *this;
  } /*-------------------------------------------------------------------------*/
 
  template <class ValType>
  ValType& Stack<ValType>::Top()
  {
-	 return pStack[Index - 1];
+	 return pStack[Index];
  }  /*-------------------------------------------------------------------------*/
 
  template <class ValType>
  bool Stack<ValType>::IsEmpty()
  {
-	 if (Index == 0)
+	 if (Index <0)
 		 return 1;
 	 else
 		 return 0;
@@ -120,6 +113,6 @@ template <class ValType>
 	 Stack temp(this);
 	 delete[] pStack;
 	 Size = temp.Size;
-	 Index = 0;
+	 Index = -1;
 	 pStack = new ValType[Size];
  } /*-------------------------------------------------------------------------*/
