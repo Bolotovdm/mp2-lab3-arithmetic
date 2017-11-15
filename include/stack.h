@@ -65,31 +65,30 @@ template <class ValType>
 {
 	 if ((Size - Index) >= 1)
 	 {
-		 pVector[Index] = elem;
-		 Index += 1;
+		 Index += 1;		 
+		 pStack[Index] = elem;
 	 }
 	 else
-		 if ((Size - Index) = 0)
+		 if ((Size - Index) == 0)
 		 {
 			 ValType* pStackNew = new ValType[Size + 10];
-			 for (int i = 0; i < Index; i++)
+			 for (int i = 0; i < Index+1; i++)
 			 {
 				 pStackNew[i] = pStack[i];
 			 }
+			 Index = Index + 1;			
 			 pStackNew[Index] = elem;
-
 			 delete[] pStack;
 			 pStack = pStackNew;
 			 Size = Size + 10;
-			 Index = Index + 1;
+
 		 }
 } /*-------------------------------------------------------------------------*/
 
  template <class ValType>
  ValType Stack<ValType>::Pop()
  {
-	 Index -= 1;
-	 return pStack[Index];
+	 return pStack[Index--];
  } /*-------------------------------------------------------------------------*/
 
  template <class ValType>
