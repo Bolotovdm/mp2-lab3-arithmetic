@@ -12,11 +12,24 @@ struct Lexem
 	char str[10];
 	LexemType type;
 	double Var;
+	int Pr;
 
-	Lexem(char* s); 
+	Lexem() {};
 	Lexem(char* s, int k);
-		
-		//Lexem(const Lexem & l);
-	//Lexem operator=(const Lexem & L);
-	//void SetVar();
+
+	Lexem(const Lexem & l);
+	Lexem operator=(const Lexem & l);
+	void SetVar();
+};
+
+class arithmetic
+{
+	Lexem* pLexem;
+	int Size;
+
+public:
+	arithmetic(char* s);
+	arithmetic(const arithmetic & a);
+	~arithmetic();
+
 };
