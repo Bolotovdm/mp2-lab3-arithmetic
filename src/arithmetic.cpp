@@ -67,7 +67,9 @@ Lexem::Lexem(char* s, int k)
 
 Lexem::Lexem(const Lexem & l)
 {
-	*this->str = *l.str;
+	for (int i=0; i<10; i++)
+		str[i] = l.str[i];
+	
 	type = l.type;
 	Var = l.Var;
 	Pr = l.Pr;
@@ -75,7 +77,9 @@ Lexem::Lexem(const Lexem & l)
 
 Lexem Lexem::operator=(const Lexem & l)
 {
-	*this->str = *l.str;
+	for (int i = 0; i<10; i++)
+		str[i] = l.str[i];
+
 	type = l.type;
 	Var = l.Var;
 	Pr = l.Pr;
@@ -114,3 +118,4 @@ arithmetic::~arithmetic()
 {
 	delete[] pLexem;
 }
+
