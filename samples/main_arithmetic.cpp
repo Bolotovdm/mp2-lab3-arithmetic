@@ -4,7 +4,7 @@
 
 int main()
 { 
-	char s1[] = "(x+s+45)";
+	char s1[] = "x+s+4575";
 	char s2[] = "(";
 
 	arithmetic A(s1); 

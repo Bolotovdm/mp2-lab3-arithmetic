@@ -26,6 +26,7 @@ class arithmetic
 {
 	Lexem* pLexem;
 	int Size;
+	int nLexems;
 
 public:
 	arithmetic(char* s);
