@@ -210,11 +210,14 @@ arithmetic::arithmetic(char* s)
 		if (isdigit(s[i]))
 		{
 			int j = i; // конец числа
-			while (isdigit(s[j]) || (s[j] == '.') ) // проверка на конец строки
+			while (isdigit(s[j]) || (s[j] == '.')) 
+			{
+				if (s[j] != '/0')
 				j++;
-			pLexem[k] = Lexem(s + i, j - i);
-			k++;
-			i = j - 1;
+			}
+				pLexem[k] = Lexem(s + i, j - i);
+				k++;
+				i = j - 1;
 		}
 		else 
 		{
@@ -228,7 +231,8 @@ arithmetic::arithmetic(char* s)
 arithmetic::arithmetic(const arithmetic & a)
 {
 	Size = a.Size;
-	
+	nLexems = a.nLexems;
+
 	pLexem = new Lexem[Size];
 	for (int i = 0; i < Size; i++)
 		pLexem[i] = a.pLexem[i];
@@ -240,3 +244,62 @@ arithmetic::~arithmetic()
 	delete[] pLexem;
 }
 
+arithmetic arithmetic::operator +=(const Lexem a)
+{
+	int size = this->GetNLexems();
+	Size += 1;
+	pLexem[size] = a;
+	nLexems += 1;
+
+	return *this;
+}
+
+double arithmetic::PolishEntry()
+{
+	arithmetic res (*this);
+	Stack<Lexem> s1;	
+
+	for (int i = 0; i < res.Size; i++)
+	{
+		if ((pLexem[i].type == NUMBER) || (pLexem[i].type == VARIABLE))
+			res += pLexem[i];
+
+		if (pLexem[i].type == LBRACKET)
+			s1.Push(pLexem[i]);
+
+		if (pLexem[i].type == OPERATOR)
+		{
+			if (s1.IsEmpty())
+				s1.Push(pLexem[i]);
+			else
+			{
+				 Lexem x = s1.Top();
+				 while (x.Pr >= pLexem[i].Pr)
+				 {
+					 x = s1.Pop();
+					 res += x;
+					 x = s1.Top();
+				 }
+				 s1.Push(pLexem[i]);
+			}
+		}
+
+		if (pLexem[i].type == RBRACKET)
+		{
+			Lexem x = s1.Pop();
+			while (x.type != LBRACKET)
+			{
+				res += x;
+				x = s1.Pop();
+			}
+		}
+	}
+
+	while (!s1.IsEmpty())
+	{
+		Lexem x = s1.Pop();
+		res += x;
+	}
+
+	return 0;
+}

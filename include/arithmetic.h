@@ -33,4 +33,8 @@ public:
 	arithmetic(const arithmetic & a);
 	~arithmetic();
 
+	int GetNLexems() { return nLexems; };
+	double PolishEntry();
+
+	arithmetic operator +=(const Lexem a);
 };
