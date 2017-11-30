@@ -24,9 +24,11 @@ int main()
 	l2 = l8;*/
 
 	double x = 0.0;
-	x = A.PolishEntry(); // когда пытается записать вторую переменную или второй +, возникает ошибка 
+	x = A.PolishEntry(); 
 
 	double a = 0.0;
 
   return 0;
+
+  cin.get();
 }

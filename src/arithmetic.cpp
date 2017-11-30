@@ -244,10 +244,9 @@ arithmetic::~arithmetic()
 	delete[] pLexem;
 }
 
-arithmetic arithmetic::operator +=(const Lexem a)
+arithmetic& arithmetic::operator +=(const Lexem a)
 {
 	int size = this->GetNLexems();
-	Size += 1;
 	pLexem[size] = a;
 	nLexems += 1;
 
@@ -256,10 +255,11 @@ arithmetic arithmetic::operator +=(const Lexem a)
 
 double arithmetic::PolishEntry()
 {
-	arithmetic res (*this);
+	arithmetic res(*this);
+	res.nLexems = 0;
 	Stack<Lexem> s1;	
 
-	for (int i = 0; i < res.Size; i++)
+	for (int i = 0; i < nLexems; i++)
 	{
 		if ((pLexem[i].type == NUMBER) || (pLexem[i].type == VARIABLE))
 			res += pLexem[i];
@@ -274,11 +274,11 @@ double arithmetic::PolishEntry()
 			else
 			{
 				 Lexem x = s1.Top();
-				 while (x.Pr >= pLexem[i].Pr)
+				 while ((s1.IsEmpty()!= 1) &&(x.Pr >= pLexem[i].Pr))  
 				 {
 					 x = s1.Pop();
 					 res += x;
-					 x = s1.Top();
+					 x = s1.Top(); 
 				 }
 				 s1.Push(pLexem[i]);
 			}

@@ -36,5 +36,5 @@ public:
 	int GetNLexems() { return nLexems; };
 	double PolishEntry();
 
-	arithmetic operator +=(const Lexem a);
+	arithmetic& operator +=(const Lexem a);
 };
