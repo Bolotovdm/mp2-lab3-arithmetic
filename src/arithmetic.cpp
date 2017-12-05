@@ -1,8 +1,6 @@
 // реализация функций и классов для вычисления арифметических выражений
 #include "arithmetic.h"
 
-const char AllLetters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
 Lexem::Lexem(char* s, int k)
 {
 	strncpy(str, s, k);
@@ -253,7 +251,7 @@ arithmetic& arithmetic::operator +=(const Lexem a)
 	return *this;
 }
 
-double arithmetic::PolishEntry()
+arithmetic arithmetic::PolishEntry()
 {
 	arithmetic res(*this);
 	res.nLexems = 0;
@@ -301,5 +299,104 @@ double arithmetic::PolishEntry()
 		res += x;
 	}
 
-	return 0;
+	return res;
+}
+
+double arithmetic::CalculatePolishEntry()
+{
+	for (int i = 0; i < nLexems; i++)
+	{
+		if (this->pLexem[i].type == VARIABLE)
+			this->pLexem[i].SetVar();
+			this->pLexem[i].type == NUMBER;
+	}
+
+	double A = 0.0;
+	double B = 0.0;
+
+	for (int i = 0; i < nLexems; i++)
+	{
+		if (this->pLexem[i].type == OPERATOR)
+		{
+			switch (this->pLexem[i].str[0])
+			{
+
+				for (int j = i; j > 0; i--)
+				{
+					if (this->pLexem[j].type == NUMBER)
+						A = this->pLexem[j].Var;
+
+					for (int k = j - 1; k > 0; k--)
+					{
+						if (this->pLexem[j].type == NUMBER)
+						{
+							B = this->pLexem[j].Var;
+							k = 0;
+						}
+					}
+
+					j = 0;
+				}
+
+			case '+':
+				this->pLexem[i].Var = A + B;
+				break;
+			case '-':
+				this->pLexem[i].Var = A - B;
+				break;
+			case '*':
+				this->pLexem[i].Var = A * B;
+				break;
+			case '/':
+				this->pLexem[i].Var = A / B;
+				break;
+
+				this->pLexem[i].type = NUMBER;
+			}
+		}
+	}
+	return this->pLexem[nLexems - 1].Var;
+}
+
+void arithmetic::CheckBracket()
+{
+	int tmp = 0;
+
+	for (int i = 0; i < nLexems; i++)
+	{
+		if (pLexem[i].type == LBRACKET)
+			tmp ++;
+
+		if (pLexem[i].type == RBRACKET)
+			tmp --;
+	}
+
+	if (tmp < 0)
+		cout << " Nepravilno rastevleny skobki ";
+}
+
+void arithmetic::CheckLetters()
+{
+	for (int i = 0; i < nLexems; i++)
+	{
+		if ((pLexem[i].type != LBRACKET) && (pLexem[i].type != RBRACKET) && (pLexem[i].type != NUMBER) && (pLexem[i].type != OPERATOR) && (pLexem[i].type != VARIABLE))
+		{
+			cout << " Nedopystimi simvol ";
+			i = nLexems;
+		}
+	}
+
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].type == VARIABLE))
+		{
+			cout << " Nedopystimi peremenaya ";
+			i = nLexems;
+		}
+	}
+}
+
+void arithmetic::CheckOperator()
+{
+
 }

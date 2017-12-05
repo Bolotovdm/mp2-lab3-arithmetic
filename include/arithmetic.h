@@ -29,12 +29,17 @@ class arithmetic
 	int nLexems;
 
 public:
+	arithmetic() {};
 	arithmetic(char* s);
 	arithmetic(const arithmetic & a);
 	~arithmetic();
 
 	int GetNLexems() { return nLexems; };
-	double PolishEntry();
-
+	arithmetic PolishEntry();
+	double CalculatePolishEntry();  // не находит this 
 	arithmetic& operator +=(const Lexem a);
+
+	void CheckBracket();
+	void CheckLetters();
+	void CheckOperator();
 };
