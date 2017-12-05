@@ -36,7 +36,7 @@ public:
 
 	int GetNLexems() { return nLexems; };
 	arithmetic PolishEntry();
-	double CalculatePolishEntry();  // не находит this 
+	double CalculatePolishEntry();
 	arithmetic& operator +=(const Lexem a);
 
 	void CheckBracket();

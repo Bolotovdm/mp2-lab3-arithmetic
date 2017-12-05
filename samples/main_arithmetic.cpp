@@ -4,13 +4,11 @@
 
 int main()
 { 
-	char s1[] = "(x+s+4575)";
+	char s1[] = "(x+s+45)";
 
 	arithmetic A(s1); 
 
-	A.CheckLetters();
-
-	A = A.PolishEntry(); 
+	A.PolishEntry(); 
 	double res = 0.0;
 	res = A.CalculatePolishEntry();
 

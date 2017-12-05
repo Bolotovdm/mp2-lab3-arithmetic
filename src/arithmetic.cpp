@@ -306,56 +306,44 @@ double arithmetic::CalculatePolishEntry()
 {
 	for (int i = 0; i < nLexems; i++)
 	{
-		if (this->pLexem[i].type == VARIABLE)
-			this->pLexem[i].SetVar();
-			this->pLexem[i].type == NUMBER;
+		if (pLexem[i].type == VARIABLE)
+			pLexem[i].SetVar();
+			pLexem[i].type = NUMBER;
 	}
 
-	double A = 0.0;
-	double B = 0.0;
+	Stack<double> s1;
+	double res = 0.0;
 
 	for (int i = 0; i < nLexems; i++)
 	{
-		if (this->pLexem[i].type == OPERATOR)
+		if (pLexem[i].type == NUMBER)
+			s1.Push(pLexem[i].Var);
+
+		if (pLexem[i].type == OPERATOR)
 		{
-			switch (this->pLexem[i].str[0])
+			double A = s1.Pop();
+			double B = s1.Pop();
+
+			switch (pLexem[i].str[0])
 			{
-
-				for (int j = i; j > 0; i--)
-				{
-					if (this->pLexem[j].type == NUMBER)
-						A = this->pLexem[j].Var;
-
-					for (int k = j - 1; k > 0; k--)
-					{
-						if (this->pLexem[j].type == NUMBER)
-						{
-							B = this->pLexem[j].Var;
-							k = 0;
-						}
-					}
-
-					j = 0;
-				}
-
 			case '+':
-				this->pLexem[i].Var = A + B;
+				res = A + B;
 				break;
 			case '-':
-				this->pLexem[i].Var = A - B;
+				res = A - B;
 				break;
 			case '*':
-				this->pLexem[i].Var = A * B;
+				res = A * B;
 				break;
 			case '/':
-				this->pLexem[i].Var = A / B;
+				res = A / B;
 				break;
 
-				this->pLexem[i].type = NUMBER;
+				s1.Push(res);
 			}
 		}
 	}
-	return this->pLexem[nLexems - 1].Var;
+	return s1.Pop();
 }
 
 void arithmetic::CheckBracket()
