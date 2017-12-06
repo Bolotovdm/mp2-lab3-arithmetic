@@ -251,6 +251,18 @@ arithmetic& arithmetic::operator +=(const Lexem a)
 	return *this;
 }
 
+arithmetic& arithmetic::operator =(const arithmetic & a)
+{
+	Size = a.Size;
+	nLexems= a.nLexems;
+
+	pLexem = new Lexem[Size];
+	for (int i = 0; i < Size; i++)
+		pLexem[i] = a.pLexem[i];
+
+	return (*this);
+}
+
 arithmetic arithmetic::PolishEntry()
 {
 	arithmetic res(*this);
@@ -307,8 +319,10 @@ double arithmetic::CalculatePolishEntry()
 	for (int i = 0; i < nLexems; i++)
 	{
 		if (pLexem[i].type == VARIABLE)
+		{
 			pLexem[i].SetVar();
 			pLexem[i].type = NUMBER;
+		}
 	}
 
 	Stack<double> s1;
@@ -317,7 +331,9 @@ double arithmetic::CalculatePolishEntry()
 	for (int i = 0; i < nLexems; i++)
 	{
 		if (pLexem[i].type == NUMBER)
+		{
 			s1.Push(pLexem[i].Var);
+		}
 
 		if (pLexem[i].type == OPERATOR)
 		{
@@ -338,9 +354,8 @@ double arithmetic::CalculatePolishEntry()
 			case '/':
 				res = A / B;
 				break;
-
-				s1.Push(res);
 			}
+			s1.Push(res);
 		}
 	}
 	return s1.Pop();
@@ -361,6 +376,22 @@ void arithmetic::CheckBracket()
 
 	if (tmp < 0)
 		cout << " Nepravilno rastevleny skobki ";
+
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == RBRACKET) && (pLexem[i - 1].str[0] == '.'))
+		{
+			cout << " Lishnya tocka ";
+		}
+	}
+
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == LBRACKET) && (pLexem[i - 1].str[0] == '.'))
+		{
+			cout << " Lishnya tocka ";
+		}
+	}
 }
 
 void arithmetic::CheckLetters()
@@ -370,7 +401,6 @@ void arithmetic::CheckLetters()
 		if ((pLexem[i].type != LBRACKET) && (pLexem[i].type != RBRACKET) && (pLexem[i].type != NUMBER) && (pLexem[i].type != OPERATOR) && (pLexem[i].type != VARIABLE))
 		{
 			cout << " Nedopystimi simvol ";
-			i = nLexems;
 		}
 	}
 
@@ -379,12 +409,56 @@ void arithmetic::CheckLetters()
 		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].type == VARIABLE))
 		{
 			cout << " Nedopystimi peremenaya ";
-			i = nLexems;
+		}
+	}
+
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].str[0] == '.'))
+		{
+			cout << " Lishnya tocka ";
+		}
+
+		if ((pLexem[i-1].type == VARIABLE) && (pLexem[i].str[0] == '.'))
+		{
+			cout << " Lishnya tocka ";
 		}
 	}
 }
 
 void arithmetic::CheckOperator()
 {
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == OPERATOR) && (pLexem[i-1].type == OPERATOR))
+		{
+			cout << " neskoilko opearchii podryad ";
+		}
+	}
 
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == RBRACKET) && (pLexem[i-1].type == OPERATOR))
+		{
+			cout << " Nepravilnie poryadok operachii i skobki  ";
+		}
+
+		if ((pLexem[i-1].type == RBRACKET) && (pLexem[i].type == OPERATOR))
+		{
+			cout << " Nepravilnie poryadok operachii i skobki  ";
+		}
+	}
+
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == LBRACKET) && (pLexem[i-1].type == OPERATOR))
+		{
+			cout << " Nepravilnie poryadok operachii i skobki  ";
+		}
+
+		if ((pLexem[i-1].type == LBRACKET) && (pLexem[i].type == OPERATOR))
+		{
+			cout << " Nepravilnie poryadok operachii i skobki  ";
+		}
+	}
 }

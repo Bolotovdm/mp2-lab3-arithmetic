@@ -38,6 +38,7 @@ public:
 	arithmetic PolishEntry();
 	double CalculatePolishEntry();
 	arithmetic& operator +=(const Lexem a);
+	arithmetic& operator =(const arithmetic & a);
 
 	void CheckBracket();
 	void CheckLetters();

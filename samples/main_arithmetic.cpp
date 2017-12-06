@@ -4,13 +4,15 @@
 
 int main()
 { 
-	char s1[] = "(x+s+45)";
+	char s1[] = "(.x+s+4.5)";
 
-	arithmetic A(s1); 
+	arithmetic A(s1), B; 
 
-	A.PolishEntry(); 
+	A.CheckLetters();
+
+	B = A.PolishEntry(); 
 	double res = 0.0;
-	res = A.CalculatePolishEntry();
+	res = B.CalculatePolishEntry();
 
 	cout << res;
 
