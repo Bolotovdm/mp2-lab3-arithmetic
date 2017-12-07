@@ -4,13 +4,18 @@
 
 int main()
 { 
-	char s1[] = "(.x+s+4.5)";
+	setlocale(LC_ALL, "Russian");
+
+	char s1[] = "-65+4";
 
 	arithmetic A(s1), B; 
 
-	A.CheckLetters();
+	/*A.CheckLetters();
+	A.CheckBracket();
+	A.CheckOperator();
+	A.CheckPoint();*/
 
-	B = A.PolishEntry(); 
+	B = A.PolishEntry(); // ломается при выделении памяти для стека
 	double res = 0.0;
 	res = B.CalculatePolishEntry();
 

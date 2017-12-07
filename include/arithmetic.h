@@ -43,4 +43,5 @@ public:
 	void CheckBracket();
 	void CheckLetters();
 	void CheckOperator();
+	void CheckPoint();
 };

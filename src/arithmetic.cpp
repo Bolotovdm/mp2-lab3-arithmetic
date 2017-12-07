@@ -224,6 +224,65 @@ arithmetic::arithmetic(char* s)
 		}
 	}
 	nLexems = k;
+
+	// делаю для унарного минуса 1) после скобки и перед число  2) просто перед числом 3) после скобки перед переменной 4) перед переменной
+
+	for (int i = 0; i < nLexems - 3; i++)
+	{
+		if ((pLexem[i].type == LBRACKET) && (pLexem[i+1].str[0] == '-') && (pLexem[i + 2].type == NUMBER ))
+		{
+			pLexem[i + 2].Var = 0 - pLexem[i + 2].Var;
+			for (int j = i + 1; j < nLexems - 1; j++)
+			{
+				pLexem[j] = pLexem[j + 1];
+			}
+			nLexems--;
+		}
+	}
+
+	for (int i = 0; i < nLexems - 1; i++)
+	{
+		if ((pLexem[i].str[0] == '-') && (pLexem[i + 1].type == NUMBER))
+		{
+
+			pLexem[i + 1].Var = 0 - pLexem[i + 1].Var;
+			for (int j = i; j < nLexems - 1; j++)
+			{
+				pLexem[j] = pLexem[j + 1];
+			}
+			nLexems--;
+		}
+	}
+
+	for (int i = 0; i < nLexems - 3; i++)
+	{
+		if ((pLexem[i].type == LBRACKET) && (pLexem[i + 1].str[0] == '-') && (pLexem[i + 2].type == VARIABLE))
+		{
+			pLexem[i + 2].SetVar();
+			pLexem[i + 2].type = NUMBER;
+			pLexem[i + 2].Var = 0 - pLexem[i + 2].Var;
+			for (int j = i + 1; j < nLexems - 1; j++)
+			{
+				pLexem[j] = pLexem[j + 1];
+			}
+			nLexems--;
+		}
+	}
+
+	for (int i = 0; i < nLexems - 1; i++)
+	{
+		if ((pLexem[i].str[0] == '-') && (pLexem[i + 1].type == VARIABLE))
+		{
+			pLexem[i + 1].SetVar();
+			pLexem[i + 1].type = NUMBER;
+			pLexem[i + 1].Var = 0 - pLexem[i + 1].Var;
+			for (int j = i; j < nLexems - 1; j++)
+			{
+				pLexem[j] = pLexem[j + 1];
+			}
+			nLexems--;
+		}
+	}
 }
 
 arithmetic::arithmetic(const arithmetic & a)
@@ -375,23 +434,8 @@ void arithmetic::CheckBracket()
 	}
 
 	if (tmp < 0)
-		cout << " Nepravilno rastevleny skobki ";
+		cout << " Ошибка. Неправильное количество скобок." << endl;
 
-	for (int i = 1; i < nLexems; i++)
-	{
-		if ((pLexem[i].type == RBRACKET) && (pLexem[i - 1].str[0] == '.'))
-		{
-			cout << " Lishnya tocka ";
-		}
-	}
-
-	for (int i = 1; i < nLexems; i++)
-	{
-		if ((pLexem[i].type == LBRACKET) && (pLexem[i - 1].str[0] == '.'))
-		{
-			cout << " Lishnya tocka ";
-		}
-	}
 }
 
 void arithmetic::CheckLetters()
@@ -400,7 +444,7 @@ void arithmetic::CheckLetters()
 	{
 		if ((pLexem[i].type != LBRACKET) && (pLexem[i].type != RBRACKET) && (pLexem[i].type != NUMBER) && (pLexem[i].type != OPERATOR) && (pLexem[i].type != VARIABLE))
 		{
-			cout << " Nedopystimi simvol ";
+			cout << " Ошибка. Недопустимый символ. " << endl;
 		}
 	}
 
@@ -408,20 +452,7 @@ void arithmetic::CheckLetters()
 	{
 		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].type == VARIABLE))
 		{
-			cout << " Nedopystimi peremenaya ";
-		}
-	}
-
-	for (int i = 1; i < nLexems; i++)
-	{
-		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].str[0] == '.'))
-		{
-			cout << " Lishnya tocka ";
-		}
-
-		if ((pLexem[i-1].type == VARIABLE) && (pLexem[i].str[0] == '.'))
-		{
-			cout << " Lishnya tocka ";
+			cout << " Ошибка. Недопустимое имя переменной. " << endl;
 		}
 	}
 }
@@ -432,7 +463,7 @@ void arithmetic::CheckOperator()
 	{
 		if ((pLexem[i].type == OPERATOR) && (pLexem[i-1].type == OPERATOR))
 		{
-			cout << " neskoilko opearchii podryad ";
+			cout << " Ошибка. Несколько операций подряд. " << endl;
 		}
 	}
 
@@ -440,12 +471,12 @@ void arithmetic::CheckOperator()
 	{
 		if ((pLexem[i].type == RBRACKET) && (pLexem[i-1].type == OPERATOR))
 		{
-			cout << " Nepravilnie poryadok operachii i skobki  ";
+			cout << " Ошибка. Знак операции перед скобкой. " << endl;
 		}
 
 		if ((pLexem[i-1].type == RBRACKET) && (pLexem[i].type == OPERATOR))
 		{
-			cout << " Nepravilnie poryadok operachii i skobki  ";
+			cout << " Ошибка. Знак операции после скобки. " << endl;
 		}
 	}
 
@@ -453,12 +484,60 @@ void arithmetic::CheckOperator()
 	{
 		if ((pLexem[i].type == LBRACKET) && (pLexem[i-1].type == OPERATOR))
 		{
-			cout << " Nepravilnie poryadok operachii i skobki  ";
+			cout << " Ошибка. Знак операции перед скобкой. " << endl;
 		}
 
 		if ((pLexem[i-1].type == LBRACKET) && (pLexem[i].type == OPERATOR))
 		{
-			cout << " Nepravilnie poryadok operachii i skobki  ";
+			cout << " Ошибка. Знак операции после скобки. " << endl;
+		}
+	}
+}
+
+void arithmetic::CheckPoint()
+{
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].str[0] == '.'))
+		{
+			cout << " Ошибка. Точка находится перед переменной. " << endl;
+		}
+
+		if ((pLexem[i - 1].type == VARIABLE) && (pLexem[i].str[0] == '.'))
+		{
+			cout << " Ошибка. Точка находится после переменной. " << endl;
+		}
+	}
+
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == RBRACKET) && (pLexem[i - 1].str[0] == '.'))
+		{
+			cout << " Ошибка. Точка находится перед ')' " << endl;
+		}
+	}
+
+	for (int i = 0; i < nLexems - 1; i++)
+	{
+		if ((pLexem[i].type == RBRACKET) && (pLexem[i + 1].str[0] == '.'))
+		{
+			cout << " Ошибка. Точка находится после ')' " << endl;
+		}
+	}
+
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == LBRACKET) && (pLexem[i - 1].str[0] == '.'))
+		{
+			cout << " Ошибка. Точка находится перед '(' " << endl;
+		}
+	}
+
+	for (int i = 0; i < nLexems - 1; i++)
+	{
+		if ((pLexem[i].type == LBRACKET) && (pLexem[i + 1].str[0] == '.'))
+		{
+			cout << " Ошибка. Точка находится после '(' " << endl;
 		}
 	}
 }
