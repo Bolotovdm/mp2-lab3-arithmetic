@@ -193,7 +193,7 @@ Lexem Lexem::operator=(const Lexem & l)
 
 void Lexem::SetVar()
 {
-	cout << "Enter the value of the variable: ";
+	cout << "Введите значение переменной " << str[0] << " : " ;
 	cin >> Var ;
 	cout << endl;
 }
@@ -225,8 +225,6 @@ arithmetic::arithmetic(char* s)
 	}
 	nLexems = k;
 
-	// делаю для унарного минуса 1) после скобки и перед число  2) просто перед числом 3) после скобки перед переменной 4) перед переменной
-
 	for (int i = 0; i < nLexems - 3; i++)
 	{
 		if ((pLexem[i].type == LBRACKET) && (pLexem[i+1].str[0] == '-') && (pLexem[i + 2].type == NUMBER ))
@@ -240,7 +238,7 @@ arithmetic::arithmetic(char* s)
 		}
 	}
 
-	for (int i = 0; i < nLexems - 1; i++)
+	for (int i = 0; i < 1; i++) //  i < nLexems ?? 
 	{
 		if ((pLexem[i].str[0] == '-') && (pLexem[i + 1].type == NUMBER))
 		{
@@ -269,7 +267,7 @@ arithmetic::arithmetic(char* s)
 		}
 	}
 
-	for (int i = 0; i < nLexems - 1; i++)
+	for (int i = 0; i < 1; i++) // i < nLexems - 1 ??
 	{
 		if ((pLexem[i].str[0] == '-') && (pLexem[i + 1].type == VARIABLE))
 		{
@@ -291,7 +289,7 @@ arithmetic::arithmetic(const arithmetic & a)
 	nLexems = a.nLexems;
 
 	pLexem = new Lexem[Size];
-	for (int i = 0; i < Size; i++)
+	for (int i = 0; i < nLexems; i++)
 		pLexem[i] = a.pLexem[i];
 
 }
@@ -316,7 +314,7 @@ arithmetic& arithmetic::operator =(const arithmetic & a)
 	nLexems= a.nLexems;
 
 	pLexem = new Lexem[Size];
-	for (int i = 0; i < Size; i++)
+	for (int i = 0; i < nLexems; i++)
 		pLexem[i] = a.pLexem[i];
 
 	return (*this);
@@ -327,6 +325,7 @@ arithmetic arithmetic::PolishEntry()
 	arithmetic res(*this);
 	res.nLexems = 0;
 	Stack<Lexem> s1;	
+	int k = 0;
 
 	for (int i = 0; i < nLexems; i++)
 	{
@@ -334,7 +333,9 @@ arithmetic arithmetic::PolishEntry()
 			res += pLexem[i];
 
 		if (pLexem[i].type == LBRACKET)
+		{
 			s1.Push(pLexem[i]);
+		}
 
 		if (pLexem[i].type == OPERATOR)
 		{
@@ -405,13 +406,13 @@ double arithmetic::CalculatePolishEntry()
 				res = A + B;
 				break;
 			case '-':
-				res = A - B;
+				res = B - A;
 				break;
 			case '*':
 				res = A * B;
 				break;
 			case '/':
-				res = A / B;
+				res = B / A;
 				break;
 			}
 			s1.Push(res);
@@ -448,11 +449,21 @@ void arithmetic::CheckLetters()
 		}
 	}
 
-	for (int i = 1; i < nLexems; i++)
+	for (int i = 0; i < nLexems - 1 ; i++)
 	{
-		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].type == VARIABLE))
+		if ((pLexem[i].type == VARIABLE) && (pLexem[i + 1].type == VARIABLE))
 		{
+			int k = 1;
+			for (int j = i + 2; j < nLexems - 1; j++)
+			{
+				if (pLexem[j].type != VARIABLE)
+				{
+					j = nLexems;
+				}
+				k++;
+			}
 			cout << " Ошибка. Недопустимое имя переменной. " << endl;
+			i = i + k;
 		}
 	}
 }
@@ -469,28 +480,30 @@ void arithmetic::CheckOperator()
 
 	for (int i = 1; i < nLexems; i++)
 	{
-		if ((pLexem[i].type == RBRACKET) && (pLexem[i-1].type == OPERATOR))
+		if ((pLexem[i].type == RBRACKET) && (pLexem[i - 1].type == OPERATOR))
 		{
-			cout << " Ошибка. Знак операции перед скобкой. " << endl;
+			cout << " Ошибка. Знак операции перед ')'. " << endl;
 		}
 
-		if ((pLexem[i-1].type == RBRACKET) && (pLexem[i].type == OPERATOR))
-		{
-			cout << " Ошибка. Знак операции после скобки. " << endl;
-		}
 	}
+		
+	if ((pLexem[nLexems-1].type == RBRACKET) && (pLexem[nLexems].type == OPERATOR))
+		{
+			cout << " Ошибка. Знак операции после ')' в конце выражения. " << endl;
+		}
+	
 
 	for (int i = 1; i < nLexems; i++)
 	{
-		if ((pLexem[i].type == LBRACKET) && (pLexem[i-1].type == OPERATOR))
-		{
-			cout << " Ошибка. Знак операции перед скобкой. " << endl;
-		}
-
 		if ((pLexem[i-1].type == LBRACKET) && (pLexem[i].type == OPERATOR))
 		{
-			cout << " Ошибка. Знак операции после скобки. " << endl;
+			cout << " Ошибка. Знак операции после '('. " << endl;
 		}
+	}
+
+	if ((pLexem[1].type == LBRACKET) && (pLexem[0].type == OPERATOR))
+	{
+		cout << " Ошибка. Знак операции перед '(' в начале выражения. " << endl;
 	}
 }
 
