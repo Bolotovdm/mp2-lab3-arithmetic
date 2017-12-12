@@ -29,7 +29,7 @@ public:
 	ValType Pop();		// удаление элемента
 	ValType& Top();		// просмотр верхнего элемента (без удаления)
 	bool IsEmpty();		// проверка на пустоту
-	int GetSize() {return (Index - 1); }	// кол-во элементов в стеке
+	int GetSize() {return (Index + 1); }	// кол-во элементов в стеке
 	void Clean();		// очистка стека
 
 };

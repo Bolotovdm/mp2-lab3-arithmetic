@@ -421,7 +421,7 @@ double arithmetic::CalculatePolishEntry()
 	return s1.Pop();
 }
 
-void arithmetic::CheckBracket()
+bool arithmetic::CheckBracket()
 {
 	int tmp = 0;
 
@@ -434,18 +434,26 @@ void arithmetic::CheckBracket()
 			tmp --;
 	}
 
-	if (tmp < 0)
+	if (tmp != 0)
+	{
 		cout << " Ошибка. Неправильное количество скобок." << endl;
-
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
 
-void arithmetic::CheckLetters()
+bool arithmetic::CheckLetters()
 {
+	int check = 0;
 	for (int i = 0; i < nLexems; i++)
 	{
 		if ((pLexem[i].type != LBRACKET) && (pLexem[i].type != RBRACKET) && (pLexem[i].type != NUMBER) && (pLexem[i].type != OPERATOR) && (pLexem[i].type != VARIABLE))
 		{
 			cout << " Ошибка. Недопустимый символ. " << endl;
+			check++;
 		}
 	}
 
@@ -464,17 +472,51 @@ void arithmetic::CheckLetters()
 			}
 			cout << " Ошибка. Недопустимое имя переменной. " << endl;
 			i = i + k;
+			check++;
 		}
+	}
+
+	if (check != 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
 	}
 }
 
-void arithmetic::CheckOperator()
+bool arithmetic::CheckOperator()
 {
+	int check = 0;
 	for (int i = 1; i < nLexems; i++)
 	{
 		if ((pLexem[i].type == OPERATOR) && (pLexem[i-1].type == OPERATOR))
 		{
 			cout << " Ошибка. Несколько операций подряд. " << endl;
+			check++;
+		}
+	}
+
+	{
+		int n = 0;
+		int m = 0;
+
+		for (int i = 0; i < nLexems; i++)
+		{
+			if (pLexem[i].type == OPERATOR)
+			{
+				n++;
+			}
+			if ((pLexem[i].type == VARIABLE) || (pLexem[i].type == NUMBER))
+			{
+				m++;
+			}
+		}
+		if (n > m - 1)
+		{
+			cout << " Ошибка. Неверное количество операций. " << endl;
+			check++;
 		}
 	}
 
@@ -483,6 +525,7 @@ void arithmetic::CheckOperator()
 		if ((pLexem[i].type == RBRACKET) && (pLexem[i - 1].type == OPERATOR))
 		{
 			cout << " Ошибка. Знак операции перед ')'. " << endl;
+			check++;
 		}
 
 	}
@@ -490,6 +533,7 @@ void arithmetic::CheckOperator()
 	if ((pLexem[nLexems-1].type == RBRACKET) && (pLexem[nLexems].type == OPERATOR))
 		{
 			cout << " Ошибка. Знак операции после ')' в конце выражения. " << endl;
+			check++;
 		}
 	
 
@@ -498,27 +542,41 @@ void arithmetic::CheckOperator()
 		if ((pLexem[i-1].type == LBRACKET) && (pLexem[i].type == OPERATOR))
 		{
 			cout << " Ошибка. Знак операции после '('. " << endl;
+			check++;
 		}
 	}
 
 	if ((pLexem[1].type == LBRACKET) && (pLexem[0].type == OPERATOR))
 	{
 		cout << " Ошибка. Знак операции перед '(' в начале выражения. " << endl;
+		check++;
+	}
+
+	if (check != 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
 	}
 }
 
-void arithmetic::CheckPoint()
+bool arithmetic::CheckPoint()
 {
+	int check = 0;
 	for (int i = 1; i < nLexems; i++)
 	{
 		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].str[0] == '.'))
 		{
 			cout << " Ошибка. Точка находится перед переменной. " << endl;
+			check++;
 		}
 
 		if ((pLexem[i - 1].type == VARIABLE) && (pLexem[i].str[0] == '.'))
 		{
 			cout << " Ошибка. Точка находится после переменной. " << endl;
+			check++;
 		}
 	}
 
@@ -527,6 +585,7 @@ void arithmetic::CheckPoint()
 		if ((pLexem[i].type == RBRACKET) && (pLexem[i - 1].str[0] == '.'))
 		{
 			cout << " Ошибка. Точка находится перед ')' " << endl;
+			check++;
 		}
 	}
 
@@ -535,6 +594,7 @@ void arithmetic::CheckPoint()
 		if ((pLexem[i].type == RBRACKET) && (pLexem[i + 1].str[0] == '.'))
 		{
 			cout << " Ошибка. Точка находится после ')' " << endl;
+			check++;
 		}
 	}
 
@@ -543,6 +603,7 @@ void arithmetic::CheckPoint()
 		if ((pLexem[i].type == LBRACKET) && (pLexem[i - 1].str[0] == '.'))
 		{
 			cout << " Ошибка. Точка находится перед '(' " << endl;
+			check++;
 		}
 	}
 
@@ -551,6 +612,16 @@ void arithmetic::CheckPoint()
 		if ((pLexem[i].type == LBRACKET) && (pLexem[i + 1].str[0] == '.'))
 		{
 			cout << " Ошибка. Точка находится после '(' " << endl;
+			check++;
 		}
+	}
+
+	if (check != 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
 	}
 }

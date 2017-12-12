@@ -40,8 +40,8 @@ public:
 	arithmetic& operator +=(const Lexem a);
 	arithmetic& operator =(const arithmetic & a);
 
-	void CheckBracket();
-	void CheckLetters();
-	void CheckOperator();
-	void CheckPoint();
+	bool CheckBracket();
+	bool CheckLetters();
+	bool CheckOperator();
+	bool CheckPoint();
 };
