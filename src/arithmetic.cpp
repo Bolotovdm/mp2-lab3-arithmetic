@@ -8,161 +8,39 @@ Lexem::Lexem(char* s, int k)
 
 	if (k == 1)
 	{
-		switch (str[0])
-		{
-		case '(': type = LBRACKET;
-			Pr = 0;
-			break;
-		case ')': type = RBRACKET;
-			break;
-		case '+': type = OPERATOR;
-			Pr = 1;
-			break;
-		case '-': type = OPERATOR;
-			Pr = 1;
-			break;
-		case '*': type = OPERATOR;
-			Pr = 2;
-			break;
-		case '/': type = OPERATOR;
-			Pr = 2;
-			break;
-		case '0': type = NUMBER;   
-			Var = 0;
-			break;
-		case '1': type = NUMBER;
-			Var = 1;
-			break;
-		case '2': type = NUMBER;
-			Var = 2;
-			break;
-		case '3': type = NUMBER;
-			Var = 3;
-			break;
-		case '4': type = NUMBER;
-			Var = 4;
-			break;
-		case '5': type = NUMBER;
-			Var = 5;
-			break;
-		case '6': type = NUMBER;
-			Var = 6;
-			break;
-		case '7': type = NUMBER;
-			Var = 7;
-			break;
-		case '8': type = NUMBER;
-			Var = 8;
-			break;
-		case '9': type = NUMBER;
-			Var = 9;
-			break;
-		case 'A': type = VARIABLE;
-			break;
-		case 'B': type = VARIABLE;
-			break;
-		case 'D': type = VARIABLE;
-			break;
-		case 'C': type = VARIABLE;
-			break;
-		case 'E': type = VARIABLE;
-			break;
-		case 'F': type = VARIABLE;
-			break;
-		case 'G': type = VARIABLE;
-			break;
-		case 'H': type = VARIABLE;
-			break;
-		case 'I': type = VARIABLE;
-			break;
-		case 'J': type = VARIABLE;
-			break;
-		case 'K': type = VARIABLE;
-			break;
-		case 'L': type = VARIABLE;
-			break;
-		case 'M': type = VARIABLE;
-			break;
-		case 'N': type = VARIABLE;
-			break;
-		case 'O': type = VARIABLE;
-			break;
-		case 'P': type = VARIABLE;
-			break;
-		case 'Q': type = VARIABLE;
-			break;
-		case 'R': type = VARIABLE;
-			break;
-		case 'S': type = VARIABLE;
-			break;
-		case 'T': type = VARIABLE;
-			break;
-		case 'U': type = VARIABLE;
-			break;
-		case 'V': type = VARIABLE;
-			break;
-		case 'W': type = VARIABLE;
-			break;
-		case 'X': type = VARIABLE;
-			break;
-		case 'Y': type = VARIABLE;
-			break;
-		case 'Z': type = VARIABLE;
-			break;
-		case 'a': type = VARIABLE;
-			break;
-		case 'b': type = VARIABLE;
-			break;
-		case 'd': type = VARIABLE;
-			break;
-		case 'c': type = VARIABLE;
-			break;
-		case 'e': type = VARIABLE;
-			break;
-		case 'f': type = VARIABLE;
-			break;
-		case 'g': type = VARIABLE;
-			break;
-		case 'h': type = VARIABLE;
-			break;
-		case 'i': type = VARIABLE;
-			break;
-		case 'j': type = VARIABLE;
-			break;
-		case 'k': type = VARIABLE;
-			break;
-		case 'l': type = VARIABLE;
-			break;
-		case 'm': type = VARIABLE;
-			break;
-		case 'n': type = VARIABLE;
-			break;
-		case 'o': type = VARIABLE;
-			break;
-		case 'p': type = VARIABLE;
-			break;
-		case 'q': type = VARIABLE;
-			break;
-		case 'r': type = VARIABLE;
-			break;
-		case 's': type = VARIABLE;
-			break;
-		case 't': type = VARIABLE;
-			break;
-		case 'u': type = VARIABLE;
-			break;
-		case 'v': type = VARIABLE;
-			break;
-		case 'w': type = VARIABLE;
-			break;
-		case 'x': type = VARIABLE;
-			break;
-		case 'y': type = VARIABLE;
-			break;
-		case 'z' : type = VARIABLE;
-			break;
-			
-		}
+		if (isalpha(str[0]))
+			type = VARIABLE;
+		else
+			if (isdigit(str[0]))
+			{
+				type = NUMBER;
+				Var = atof(str);
+			}
+			else
+			{
+				switch (str[0])
+				{
+				case '(': type = LBRACKET;
+					Pr = 0;
+					break;
+				case ')': type = RBRACKET;
+					break;
+				case '+': type = OPERATOR;
+					Pr = 1;
+					break;
+				case '-': type = OPERATOR;
+					Pr = 1;
+					break;
+				case '*': type = OPERATOR;
+					Pr = 2;
+					break;
+				case '/': type = OPERATOR;
+					Pr = 2;
+					break;
+				default: type = UNKNOWN; // почему не работает для неизвестного типа
+					break;
+				}
+			}
 	}
 	else if (k != 1)
 	{
@@ -193,6 +71,8 @@ Lexem Lexem::operator=(const Lexem & l)
 
 void Lexem::SetVar()
 {
+	setlocale(LC_ALL, "Russian");
+
 	cout << "Введите значение переменной " << str[0] << " : " ;
 	cin >> Var ;
 	cout << endl;
@@ -238,7 +118,7 @@ arithmetic::arithmetic(char* s)
 		}
 	}
 
-	for (int i = 0; i < 1; i++) //  i < nLexems ?? 
+	for (int i = 0; i < 1; i++) 
 	{
 		if ((pLexem[i].str[0] == '-') && (pLexem[i + 1].type == NUMBER))
 		{
@@ -267,7 +147,7 @@ arithmetic::arithmetic(char* s)
 		}
 	}
 
-	for (int i = 0; i < 1; i++) // i < nLexems - 1 ??
+	for (int i = 0; i < 1; i++) 
 	{
 		if ((pLexem[i].str[0] == '-') && (pLexem[i + 1].type == VARIABLE))
 		{
@@ -381,6 +261,14 @@ double arithmetic::CalculatePolishEntry()
 		if (pLexem[i].type == VARIABLE)
 		{
 			pLexem[i].SetVar();
+			for(int j=i+1; j< nLexems; j++)
+			{
+				if(pLexem[i].str[0] == pLexem[j].str[0])
+				{
+					pLexem[j].Var = pLexem[i].Var;
+					pLexem[j].type = NUMBER;
+				}
+			}
 			pLexem[i].type = NUMBER;
 		}
 	}
@@ -423,6 +311,8 @@ double arithmetic::CalculatePolishEntry()
 
 bool arithmetic::CheckBracket()
 {
+	setlocale(LC_ALL, "Russian");
+
 	int tmp = 0;
 
 	for (int i = 0; i < nLexems; i++)
@@ -447,10 +337,12 @@ bool arithmetic::CheckBracket()
 
 bool arithmetic::CheckLetters()
 {
+	setlocale(LC_ALL, "Russian");
+
 	int check = 0;
 	for (int i = 0; i < nLexems; i++)
 	{
-		if ((pLexem[i].type != LBRACKET) && (pLexem[i].type != RBRACKET) && (pLexem[i].type != NUMBER) && (pLexem[i].type != OPERATOR) && (pLexem[i].type != VARIABLE))
+		if (pLexem[i].type == UNKNOWN)
 		{
 			cout << " Ошибка. Недопустимый символ. " << endl;
 			check++;
@@ -488,6 +380,8 @@ bool arithmetic::CheckLetters()
 
 bool arithmetic::CheckOperator()
 {
+	setlocale(LC_ALL, "Russian");
+
 	int check = 0;
 	for (int i = 1; i < nLexems; i++)
 	{
@@ -564,6 +458,8 @@ bool arithmetic::CheckOperator()
 
 bool arithmetic::CheckPoint()
 {
+	setlocale(LC_ALL, "Russian");
+
 	int check = 0;
 	for (int i = 1; i < nLexems; i++)
 	{
@@ -624,4 +520,11 @@ bool arithmetic::CheckPoint()
 	{
 		return 1;
 	}
+}
+
+char arithmetic::GetCharLexem(int n)
+{
+	char res;
+	res = pLexem[n].str[0];
+	return res;
 }

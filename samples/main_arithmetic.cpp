@@ -18,7 +18,7 @@ int main()
 		std::cin.getline(s2, 100);
 		cout << endl;
 		arithmetic A(s2);
-		while ((A.CheckBracket() == 0) || (A.CheckOperator() == 0) || (A.CheckOperator() == 0) || (A.CheckPoint() == 0))
+		while ((A.CheckBracket() == 0) || (A.CheckOperator() == 0) || (A.CheckLetters() == 0) || (A.CheckPoint() == 0))
 		{
 			cout << endl;
 			cout << "Enter an expression again: ";

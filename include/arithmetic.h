@@ -5,7 +5,7 @@
 
 using namespace std;
 
- enum LexemType { NUMBER, OPERATOR, VARIABLE, LBRACKET, RBRACKET };
+ enum LexemType { NUMBER, OPERATOR, VARIABLE, LBRACKET, RBRACKET, UNKNOWN };
 
 struct Lexem
 {
@@ -39,6 +39,7 @@ public:
 	double CalculatePolishEntry();
 	arithmetic& operator +=(const Lexem a);
 	arithmetic& operator =(const arithmetic & a);
+	char GetCharLexem(int n);
 
 	bool CheckBracket();
 	bool CheckLetters();
