@@ -37,7 +37,7 @@ Lexem::Lexem(char* s, int k)
 				case '/': type = OPERATOR;
 					Pr = 2;
 					break;
-				default: type = UNKNOWN; // почему не работает для неизвестного типа
+				default: type = UNKNOWN; 
 					break;
 				}
 			}

@@ -99,98 +99,216 @@ TEST(arithmetic, can_compare_two_arithmetic)
 	EXPECT_EQ(true,res);
 }
 
-TEST(arithmetic, cam_check_bracket)
+TEST(arithmetic, can_check_false_number_bracket)
 {
 	arithmetic tmp("(()");
-	arithmetic tmp2("(4+5)");
-	arithmetic tmp3("()");
 
 	bool res;
-	bool res2;
-	bool res3;
 
 	res = tmp.CheckBracket();
+
+	EXPECT_EQ(false,res);
+}
+
+TEST(arithmetic, can_check_true_number_bracket_in_expression)
+{
+	arithmetic tmp2("(4+5)");
+
+	bool res2;
+
 	res2 = tmp2.CheckBracket();
+
+	EXPECT_EQ(true, res2);
+}
+
+TEST(arithmetic, can_check_true_number_bracket)
+{
+	arithmetic tmp3("()");
+
+	bool res3;
+
 	res3 = tmp3.CheckBracket();
 
-	EXPECT_EQ(false,res);
-	EXPECT_EQ(true,res2);
-	EXPECT_EQ(true,res3);
+	EXPECT_EQ(true, res3);
 }
 
-TEST(arithmetic, cam_check_point)
+TEST(arithmetic, can_check_point_before_variable)
 {
 	arithmetic tmp(".a");
-	arithmetic tmp2("a.");
-	arithmetic tmp3(".)");
-	arithmetic tmp4("(.");
-	arithmetic tmp5(".(");
-	arithmetic tmp6(").");
-
 	bool res;
-	bool res2;
-	bool res3;
-	bool res4;
-	bool res5;
-	bool res6;
-
 	res = tmp.CheckPoint();
-	res2 = tmp2.CheckPoint();
-	res3 = tmp3.CheckPoint();
-	res4 = tmp4.CheckPoint();
-	res5 = tmp5.CheckPoint();
-	res6 = tmp6.CheckPoint();
-
 	EXPECT_EQ(false,res);
-	EXPECT_EQ(false,res2);
-	EXPECT_EQ(false,res3);
-	EXPECT_EQ(false,res4);
-	EXPECT_EQ(false,res5);
-	EXPECT_EQ(false,res6);
 }
 
-TEST(arithmetic, can_check_operator)
+TEST(arithmetic, can_check_point_after_variable)
+{
+	arithmetic tmp2("a.");
+	bool res2;
+	res2 = tmp2.CheckPoint();
+	EXPECT_EQ(false, res2);
+}
+
+TEST(arithmetic, can_check_point_before_lbracket)
+{
+	arithmetic tmp3(".)");
+	bool res3;
+	res3 = tmp3.CheckPoint();
+	EXPECT_EQ(false, res3);
+}
+
+TEST(arithmetic, can_check_point_after_lbracket)
+{
+	arithmetic tmp4("(.");
+	bool res4;
+	res4 = tmp4.CheckPoint();
+	EXPECT_EQ(false, res4);
+}
+
+TEST(arithmetic, can_check_point_before_rbracket)
+{
+	arithmetic tmp5(".(");
+	bool res5;
+	res5 = tmp5.CheckPoint();
+	EXPECT_EQ(false, res5);
+}
+
+TEST(arithmetic, can_check_point_after_rbracket)
+{
+	arithmetic tmp6(").");
+	bool res6;
+	res6 = tmp6.CheckPoint();
+	EXPECT_EQ(false, res6);
+}
+
+TEST(arithmetic, can_check_two_operators_undermine)
 {
 	arithmetic tmp("++");
-	arithmetic tmp2("4+5+");
-	arithmetic tmp3("4+)");
-	arithmetic tmp4(")+");
-	arithmetic tmp5("(+");
-	arithmetic tmp6("+(");
-
 	bool res;
-	bool res2;
-	bool res3;
-	bool res4;
-	bool res5;
-	bool res6;
-
 	res = tmp.CheckOperator();
-	res2 = tmp2.CheckOperator();
-	res3 = tmp3.CheckOperator();
-	res4 = tmp4.CheckOperator();
-	res5 = tmp5.CheckOperator();
-	res6 = tmp6.CheckOperator();
-
 	EXPECT_EQ(false,res);
-	EXPECT_EQ(false,res2);
-	EXPECT_EQ(false,res3);
-	EXPECT_EQ(false,res4);
-	EXPECT_EQ(false,res5);
-	EXPECT_EQ(false,res6);
 }
 
-TEST(arithmetic, can_check_letters)
+TEST(arithmetic, can_check_false_quantity_operator)
+{
+	arithmetic tmp2("4+5+");
+	bool res2;
+	res2 = tmp2.CheckOperator();
+	EXPECT_EQ(false, res2);
+}
+
+TEST(arithmetic, can_checky_operator_before_lbracket)
+{
+	arithmetic tmp3("+)");
+	bool res3;
+	res3 = tmp3.CheckOperator();
+	EXPECT_EQ(false, res3);
+}
+
+TEST(arithmetic, can_checky_operator_after_rbracket)
+{
+	arithmetic tmp4(")+");
+	bool res4;
+	res4 = tmp4.CheckOperator();
+	EXPECT_EQ(false, res4);
+}
+
+TEST(arithmetic, can_checky_operator_after_lbracket)
+{
+	arithmetic tmp5("(+");
+	bool res5;
+	res5 = tmp5.CheckOperator();
+	EXPECT_EQ(false, res5);
+}
+
+TEST(arithmetic, can_checky_operator_before_rbracket)
+{
+	arithmetic tmp6("+(");
+	bool res6;
+	res6 = tmp6.CheckOperator();
+	EXPECT_EQ(false, res6);
+}
+
+TEST(arithmetic, can_check_unknown_letters)
 {
 	arithmetic tmp("^");
-	arithmetic tmp2("aaa");
-	
 	bool res;
-	bool res2;
-
 	res = tmp.CheckLetters();
-	res2 = tmp2.CheckLetters();
-
 	EXPECT_EQ(false,res);
-	EXPECT_EQ(false,res2);
 }
+
+TEST(arithmetic, can_check_incorrect_letters)
+{
+	arithmetic tmp2("aaa");
+	bool res2;
+	res2 = tmp2.CheckLetters();
+	EXPECT_EQ(false, res2);
+}
+
+TEST(arithmetic, can_correct_cout_unary_minus_at_begin_expression)
+{
+	arithmetic tmp("-4+5");
+	int res;
+	tmp = tmp.PolishEntry();
+	res = tmp.CalculatePolishEntry();
+	EXPECT_EQ(1, res);
+}
+
+TEST(arithmetic, can_correct_multiply_unary_minus_at_begin_expression)
+{
+	arithmetic tmp("-4*5");
+	int res;
+	tmp = tmp.PolishEntry();
+	res = tmp.CalculatePolishEntry();
+	EXPECT_EQ(-20, res);
+}
+
+TEST(arithmetic, can_correct_cout_unary_minus_in_bracket)
+{
+	arithmetic tmp("5+(-4)");
+	int res;
+	tmp = tmp.PolishEntry();
+	res = tmp.CalculatePolishEntry();
+	EXPECT_EQ(1, res);
+}
+
+TEST(arithmetic, can_correct_multiply_unary_minus_in_bracket)
+{
+	arithmetic tmp("5*(-4)");
+	int res;
+	tmp = tmp.PolishEntry();
+	res = tmp.CalculatePolishEntry();
+	EXPECT_EQ(-20, res);
+}
+
+TEST(arithmetic, can_correct_cout_double_number)
+{
+	arithmetic tmp("5.0+5.0");
+	int res;
+	tmp = tmp.PolishEntry();
+	res = tmp.CalculatePolishEntry();
+	EXPECT_EQ(10, res);
+}
+
+TEST(arithmetic, can_cout_equality_lexem)
+{
+	arithmetic tmp("(8+2*5)/(1+3*2-4)");
+	Lexem cmp[2];
+	cmp[0] = Lexem("-", OPERATOR);
+	cmp[1] = Lexem("6", VARIABLE);
+	tmp += cmp[0];
+	tmp += cmp[1];
+
+	int res;
+	tmp = tmp.PolishEntry();
+	res = tmp.CalculatePolishEntry();
+	EXPECT_EQ(0, res);
+}
+
+//TEST(arithmetic, can_correct_sub_double_number)
+//{
+//	arithmetic tmp("7.3-4.7");
+//	int res;
+//	tmp = tmp.PolishEntry();
+//	res = tmp.CalculatePolishEntry();
+//	EXPECT_EQ(2.6, res);
+//}

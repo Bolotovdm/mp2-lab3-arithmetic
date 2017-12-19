@@ -18,7 +18,7 @@ template <class ValType>
 class Stack
 {
 protected:
-	ValType *pStack;
+	ValType *pStack; // массив ValType (может быть int, double и т.д.) 
 	int Size;		// физический размер
 	int Index;	// индекс первой свободной €чейки (следующа€ €чейка, после той, в которую установлен элемент)
 public:

@@ -9,40 +9,40 @@ using namespace std;
 
 struct Lexem
 {
-	char str[10];
-	LexemType type;
-	double Var;
-	int Pr;
+	char str[10];		// массив char под лексемы
+	LexemType type;		// тип лексемы
+	double Var;			// значение лексемы
+	int Pr;				// приоритет лексемы
 
-	Lexem() {};
-	Lexem(char* s, int k);
+	Lexem() {}	// пустой конструктор 
+	Lexem(char* s, int k);	// конструктор 
 
-	Lexem(const Lexem & l);
-	Lexem operator=(const Lexem & l);
-	void SetVar();
+	Lexem(const Lexem & l);		// конструктор копирования
+	Lexem operator=(const Lexem & l);	// перегрузка оператора =
+	void SetVar();	// функция установки значения переменной
 };
 
 class arithmetic
 {
-	Lexem* pLexem;
-	int Size;
-	int nLexems;
+	Lexem* pLexem;		// массив лексем
+	int Size;			// размер массива
+	int nLexems;		// количество лексем в массиве
 
 public:
-	arithmetic() {};
-	arithmetic(char* s);
-	arithmetic(const arithmetic & a);
-	~arithmetic();
+	arithmetic() {};		// пустой конструткор
+	arithmetic(char* s);	// конструктор
+	arithmetic(const arithmetic & a);		// конструктор копирования
+	~arithmetic();		// деструктор
 
-	int GetNLexems() { return nLexems; };
-	arithmetic PolishEntry();
-	double CalculatePolishEntry();
-	arithmetic& operator +=(const Lexem a);
-	arithmetic& operator =(const arithmetic & a);
-	char GetCharLexem(int n);
+	int GetNLexems() { return nLexems; };		// возвращает количество лексем
+	arithmetic PolishEntry();		// приведение к польской записи
+	double CalculatePolishEntry();		// вычисление по польской записи
+	arithmetic& operator +=(const Lexem a);			// перегрузка оператора +=
+	arithmetic& operator =(const arithmetic & a);		// перегрузка оператора =
+	char GetCharLexem(int n);		// возвращает поля char для лексемы
 
-	bool CheckBracket();
-	bool CheckLetters();
-	bool CheckOperator();
-	bool CheckPoint();
+	bool CheckBracket();	// проверка скобок
+	bool CheckLetters();	// проверка переменых
+	bool CheckOperator();	// проверка операторов
+	bool CheckPoint();		// проверка точек
 };
