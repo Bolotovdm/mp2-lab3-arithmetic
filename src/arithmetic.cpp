@@ -88,7 +88,7 @@ arithmetic::arithmetic(char* s)
 		if (isdigit(s[i]))
 		{
 			int j = i; // конец числа
-			while (isdigit(s[j]) || (s[j] == '.')) 
+			while (isdigit(s[j]) || (s[j] == ',')) 
 			{
 				if (s[j] != '/0')
 				j++;
@@ -104,6 +104,23 @@ arithmetic::arithmetic(char* s)
 		}
 	}
 	nLexems = k;
+
+	for (int i = 0; i < nLexems; i++)
+	{
+		if (pLexem[i].type == VARIABLE)
+		{
+			pLexem[i].SetVar();
+			for(int j=i+1; j< nLexems; j++)
+			{
+				if(pLexem[i].str[0] == pLexem[j].str[0])
+				{
+					pLexem[j].Var = pLexem[i].Var;
+					pLexem[j].type = NUMBER;
+				}
+			}
+			pLexem[i].type = NUMBER;
+		}
+	}
 
 	for (int i = 0; i < nLexems - 3; i++)
 	{
@@ -256,7 +273,7 @@ arithmetic arithmetic::PolishEntry()
 
 double arithmetic::CalculatePolishEntry()
 {
-	for (int i = 0; i < nLexems; i++)
+	/*for (int i = 0; i < nLexems; i++)
 	{
 		if (pLexem[i].type == VARIABLE)
 		{
@@ -271,7 +288,7 @@ double arithmetic::CalculatePolishEntry()
 			}
 			pLexem[i].type = NUMBER;
 		}
-	}
+	}*/
 
 	Stack<double> s1;
 	double res = 0.0;
@@ -463,51 +480,51 @@ bool arithmetic::CheckPoint()
 	int check = 0;
 	for (int i = 1; i < nLexems; i++)
 	{
-		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].str[0] == '.'))
+		if ((pLexem[i].type == VARIABLE) && (pLexem[i - 1].str[0] == ','))
 		{
-			cout << " Ошибка. Точка находится перед переменной. " << endl;
+			cout << " Ошибка. Запятая находится перед переменной. " << endl;
 			check++;
 		}
 
-		if ((pLexem[i - 1].type == VARIABLE) && (pLexem[i].str[0] == '.'))
+		if ((pLexem[i - 1].type == VARIABLE) && (pLexem[i].str[0] == ','))
 		{
-			cout << " Ошибка. Точка находится после переменной. " << endl;
-			check++;
-		}
-	}
-
-	for (int i = 1; i < nLexems; i++)
-	{
-		if ((pLexem[i].type == RBRACKET) && (pLexem[i - 1].str[0] == '.'))
-		{
-			cout << " Ошибка. Точка находится перед ')' " << endl;
-			check++;
-		}
-	}
-
-	for (int i = 0; i < nLexems - 1; i++)
-	{
-		if ((pLexem[i].type == RBRACKET) && (pLexem[i + 1].str[0] == '.'))
-		{
-			cout << " Ошибка. Точка находится после ')' " << endl;
+			cout << " Ошибка. Запятая находится после переменной. " << endl;
 			check++;
 		}
 	}
 
 	for (int i = 1; i < nLexems; i++)
 	{
-		if ((pLexem[i].type == LBRACKET) && (pLexem[i - 1].str[0] == '.'))
+		if ((pLexem[i].type == RBRACKET) && (pLexem[i - 1].str[0] == ','))
 		{
-			cout << " Ошибка. Точка находится перед '(' " << endl;
+			cout << " Ошибка. Запятая находится перед ')' " << endl;
 			check++;
 		}
 	}
 
 	for (int i = 0; i < nLexems - 1; i++)
 	{
-		if ((pLexem[i].type == LBRACKET) && (pLexem[i + 1].str[0] == '.'))
+		if ((pLexem[i].type == RBRACKET) && (pLexem[i + 1].str[0] == ','))
 		{
-			cout << " Ошибка. Точка находится после '(' " << endl;
+			cout << " Ошибка. Запятая находится после ')' " << endl;
+			check++;
+		}
+	}
+
+	for (int i = 1; i < nLexems; i++)
+	{
+		if ((pLexem[i].type == LBRACKET) && (pLexem[i - 1].str[0] == ','))
+		{
+			cout << " Ошибка. Запятая находится перед '(' " << endl;
+			check++;
+		}
+	}
+
+	for (int i = 0; i < nLexems - 1; i++)
+	{
+		if ((pLexem[i].type == LBRACKET) && (pLexem[i + 1].str[0] == ','))
+		{
+			cout << " Ошибка. Запятая находится после '(' " << endl;
 			check++;
 		}
 	}

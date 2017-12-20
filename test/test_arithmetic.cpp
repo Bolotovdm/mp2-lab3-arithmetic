@@ -134,7 +134,7 @@ TEST(arithmetic, can_check_true_number_bracket)
 
 TEST(arithmetic, can_check_point_before_variable)
 {
-	arithmetic tmp(".a");
+	arithmetic tmp(",a");
 	bool res;
 	res = tmp.CheckPoint();
 	EXPECT_EQ(false,res);
@@ -142,7 +142,7 @@ TEST(arithmetic, can_check_point_before_variable)
 
 TEST(arithmetic, can_check_point_after_variable)
 {
-	arithmetic tmp2("a.");
+	arithmetic tmp2("a,");
 	bool res2;
 	res2 = tmp2.CheckPoint();
 	EXPECT_EQ(false, res2);
@@ -150,7 +150,7 @@ TEST(arithmetic, can_check_point_after_variable)
 
 TEST(arithmetic, can_check_point_before_lbracket)
 {
-	arithmetic tmp3(".)");
+	arithmetic tmp3(",)");
 	bool res3;
 	res3 = tmp3.CheckPoint();
 	EXPECT_EQ(false, res3);
@@ -158,7 +158,7 @@ TEST(arithmetic, can_check_point_before_lbracket)
 
 TEST(arithmetic, can_check_point_after_lbracket)
 {
-	arithmetic tmp4("(.");
+	arithmetic tmp4("(,");
 	bool res4;
 	res4 = tmp4.CheckPoint();
 	EXPECT_EQ(false, res4);
@@ -166,7 +166,7 @@ TEST(arithmetic, can_check_point_after_lbracket)
 
 TEST(arithmetic, can_check_point_before_rbracket)
 {
-	arithmetic tmp5(".(");
+	arithmetic tmp5(",(");
 	bool res5;
 	res5 = tmp5.CheckPoint();
 	EXPECT_EQ(false, res5);
@@ -174,7 +174,7 @@ TEST(arithmetic, can_check_point_before_rbracket)
 
 TEST(arithmetic, can_check_point_after_rbracket)
 {
-	arithmetic tmp6(").");
+	arithmetic tmp6("),");
 	bool res6;
 	res6 = tmp6.CheckPoint();
 	EXPECT_EQ(false, res6);
@@ -282,7 +282,7 @@ TEST(arithmetic, can_correct_multiply_unary_minus_in_bracket)
 
 TEST(arithmetic, can_correct_cout_double_number)
 {
-	arithmetic tmp("5.0+5.0");
+	arithmetic tmp("5,0+5,0");
 	int res;
 	tmp = tmp.PolishEntry();
 	res = tmp.CalculatePolishEntry();
@@ -304,11 +304,11 @@ TEST(arithmetic, can_cout_equality_lexem)
 	EXPECT_EQ(0, res);
 }
 
-//TEST(arithmetic, can_correct_sub_double_number)
-//{
-//	arithmetic tmp("7.3-4.7");
-//	int res;
-//	tmp = tmp.PolishEntry();
-//	res = tmp.CalculatePolishEntry();
-//	EXPECT_EQ(2.6, res);
-//}
+TEST(arithmetic, can_correct_sub_double_number)
+{
+	arithmetic tmp("7,3-4,7");
+	int res;
+	tmp = tmp.PolishEntry();
+	res = tmp.CalculatePolishEntry();
+	EXPECT_EQ(2.6, res);
+}
